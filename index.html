@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>R4X Robot - Profile Page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        overflow: hidden;
+        background: #e0e0e4;
+        cursor: crosshair;
+        font-family: "Inter", sans-serif;
+      }
+      #container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+      #robotCanvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #dyeCanvas {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      /* Banner Base Styles */
+      #banner {
+        position: absolute;
+        top: 35%;
+        left: 88%;
+        transform: translate(-50%, -50%);
+        width: 22vw;
+        height: 60vh;
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(25px) saturate(140%);
+        -webkit-backdrop-filter: blur(25px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        text-align: center;
+        animation: float 6s ease-in-out infinite;
+        z-index: 10;
+      }
+
+      /* Structural layout switch when active */
+      #banner.active-profile {
+        animation: none;
+        top: 0;
+        transform: none;
+        height: 100vh;
+        border-radius: 0px;
+        border-left: 1px solid rgba(255, 255, 255, 0.4);
+        border-top: none;
+        background: rgba(240, 240, 245, 0.4);
+        backdrop-filter: blur(35px) saturate(150%);
+        -webkit-backdrop-filter: blur(35px) saturate(150%);
+        justify-content: flex-start;
+        align-items: flex-start;
+        text-align: left;
+        padding: 6% 6%;
+      }
+
+      #banner-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #333;
+        text-shadow: 0 1px 4px rgba(255, 255, 255, 0.4);
+        user-select: none;
+      }
+
+      /* Start Session Button Styling */
+      #start-btn {
+        margin-top: 30px;
+        padding: 15px 35px;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        pointer-events: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      #start-btn.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      #start-btn:hover {
+        background: rgba(0, 0, 0, 0.85);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      /* MODIFICATION 1: Line-by-Line Cascading Blur-Reveal Pipeline Engine */
+      #portfolio-content {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      #portfolio-content.show {
+        display: flex;
+      }
+
+      /* Only apply cascading entry animation on the explicit first initialization instance */
+      #portfolio-content.show.first-time h1,
+      #portfolio-content.show.first-time h2,
+      #portfolio-content.show.first-time .glass-menu-btn {
+        opacity: 0;
+        animation: lineBlurRevealDrop 1.2s cubic-bezier(0.19, 1, 0.22, 1)
+          forwards;
+      }
+
+      /* Standard fallback static parameters for subsequent returns to home screen */
+      #portfolio-content.show h1,
+      #portfolio-content.show h2,
+      #portfolio-content.show .glass-menu-btn {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0px);
+      }
+
+      /* Dynamic Line-by-Line Delays (Only applied during first run) */
+      #portfolio-content.show.first-time h1 {
+        animation-delay: 0.1s;
+      }
+      #portfolio-content.show.first-time h2 {
+        animation-delay: 0.3s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(1) {
+        animation-delay: 0.5s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(3) {
+        animation-delay: 0.7s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(4) {
+        animation-delay: 0.8s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(5) {
+        animation-delay: 0.9s;
+      }
+      #portfolio-content.show.first-time .glass-menu-btn:nth-child(6) {
+        animation-delay: 1s;
+      }
+
+      #portfolio-content.hide-to-side {
+        display: none;
+        opacity: 0;
+      }
+
+      @keyframes lineBlurRevealDrop {
+        0% {
+          opacity: 0;
+          filter: blur(25px);
+          transform: translateY(-35px);
+        }
+        100% {
+          opacity: 1;
+          filter: blur(0px);
+          transform: translateY(0);
+        }
+      }
+
+      #portfolio-content h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: #1d1d1f;
+        margin-bottom: 10px;
+        letter-spacing: -0.02em;
+      }
+      #portfolio-content h2 {
+        font-size: 1.35rem;
+        font-weight: 400;
+        color: #4e4e52;
+        margin-bottom: 45px;
+        line-height: 1.6;
+        max-width: 90%;
+      }
+
+      /* Neumorphic Grid Interface System */
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 28px;
+        width: 100%;
+        padding: 20px 5px;
+      }
+
+      .glass-menu-btn {
+        position: relative;
+        background: #f4f4f7;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 28px;
+        padding: 34px 15px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1d1d1f;
+        cursor: pointer;
+        text-align: center;
+        box-shadow:
+          10px 10px 24px #b8b8bc,
+          -10px -10px 24px #ffffff;
+        transition:
+          background 0.4s ease,
+          color 0.4s ease,
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.4s ease;
+        overflow: hidden;
+      }
+
+      .glass-menu-btn:hover {
+        background: #fdfdfd;
+        color: #000000;
+        transform: scale(1.02) translateY(-2px);
+        box-shadow:
+          14px 14px 32px #b0b0b5,
+          -14px -14px 32px #ffffff;
+      }
+
+      .glass-menu-btn:active {
+        transform: scale(0.99) translateY(0px);
+        box-shadow:
+          inset 6px 6px 14px #c8c8cc,
+          inset -6px -6px 14px #ffffff;
+      }
+
+      /* Navbar entry syncing up with the top drop-reveal animation */
+      #navbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 85px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.15);
+        border-right: 1px solid rgba(255, 255, 255, 0.35);
+        z-index: 20;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+        opacity: 0;
+      }
+
+      #navbar.visible {
+        display: flex;
+        pointer-events: auto;
+        backdrop-filter: blur(30px) saturate(140%);
+        -webkit-backdrop-filter: blur(30px) saturate(140%);
+        animation: lineBlurRevealDrop 1.4s cubic-bezier(0.19, 1, 0.22, 1)
+          forwards;
+      }
+
+      .nav-icon-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #444446;
+        font-size: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .nav-icon-btn:hover,
+      .nav-icon-btn.active {
+        background: rgba(255, 255, 255, 0.8);
+        color: #000000;
+        border-color: rgba(255, 255, 255, 0.8);
+        transform: scale(1.05);
+      }
+
+      /* Stack Animation Card Display Systems */
+      #card-stack-container {
+        position: relative;
+        width: 100%;
+        height: 80vh;
+        display: none;
+        pointer-events: none;
+        z-index: 15;
+      }
+      #card-stack-container.active {
+        display: block;
+      }
+
+      /* Solid White Neumorphic Portfolio Cards */
+      .portfolio-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        border-radius: 28px;
+        background: #f4f4f7;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+          12px 12px 30px #b8b8bc,
+          -12px -12px 30px #ffffff;
+        pointer-events: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        opacity: 0;
+        transform: scale(0.9) translateY(40px);
+        transition:
+          transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+          opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .portfolio-card.layer-0 {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        z-index: 5;
+      }
+      .portfolio-card.layer-1 {
+        opacity: 0.75;
+        transform: scale(0.96) translateY(-18px);
+        z-index: 4;
+        pointer-events: none;
+      }
+      .portfolio-card.layer-2 {
+        opacity: 0.4;
+        transform: scale(0.92) translateY(-36px);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .card-scrollbox {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        padding: 45px;
+      }
+      .card-scrollbox::-webkit-scrollbar {
+        width: 5px;
+      }
+      .card-scrollbox::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+      }
+
+      .card-close-btn {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: #f4f4f7;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+          4px 4px 10px #b8b8bc,
+          -4px -4px 10px #ffffff;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1d1d1f;
+        transition: all 0.2s ease;
+        z-index: 20;
+      }
+      .card-close-btn:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+        box-shadow:
+          5px 5px 12px #aeaeb2,
+          -5px -5px 12px #ffffff;
+      }
+
+      .portfolio-card h3 {
+        font-size: 2.2rem;
+        color: #1d1d1f;
+        margin-bottom: 30px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+
+      /* Clean Neumorphic Content Blocks */
+      .reveal-item,
+      .timeline-node {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        margin-bottom: 22px;
+        color: #3a3a3c;
+        line-height: 1.7;
+        font-size: 1.05rem;
+        background: #ffffff;
+        padding: 22px 26px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+          6px 6px 15px #bcbcbf,
+          -6px -6px 15px #ffffff;
+      }
+      .reveal-item.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-left {
+        transform: translateX(-20px);
+      }
+      .reveal-right {
+        transform: translateX(20px);
+      }
+      .reveal-scale {
+        transform: scale(0.96);
+      }
+
+      /* Timeline Subsystem Containers */
+      .timeline-container {
+        position: relative;
+        padding-left: 5px;
+      }
+      .timeline-node {
+        opacity: 1;
+        transform: none;
+        display: block;
+      }
+      .timeline-date {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #9c42f5;
+        margin-bottom: 6px;
+        letter-spacing: 0.05em;
+      }
+      .timeline-role {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1d1d1f;
+        margin-bottom: 6px;
+      }
+      .timeline-desc {
+        font-size: 1rem;
+        color: #444446;
+        line-height: 1.6;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) translateY(0px);
+        }
+        50% {
+          transform: translate(-50%, -50%) translateY(-12px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="navbar">
+      <div
+        class="nav-icon-btn active"
+        id="nav-home"
+        onclick="resetToHomeDashboard()"
+      >
+        <i class="fa-solid fa-house"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-about"
+        onclick="openCardFromNav('about')"
+      >
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-stack"
+        onclick="openCardFromNav('stack')"
+      >
+        <i class="fa-solid fa-layer-group"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-experience"
+        onclick="openCardFromNav('experience')"
+      >
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-education"
+        onclick="openCardFromNav('education')"
+      >
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-projects"
+        onclick="openCardFromNav('projects')"
+      >
+        <i class="fa-solid fa-code"></i>
+      </div>
+      <div
+        class="nav-icon-btn"
+        id="nav-contact"
+        onclick="openCardFromNav('contact')"
+      >
+        <i class="fa-solid fa-envelope"></i>
+      </div>
+    </nav>
+
+    <div id="container">
+      <canvas id="robotCanvas"></canvas>
+      <canvas id="dyeCanvas"></canvas>
+
+      <div id="banner">
+        <h1 id="banner-title">Move the cursor to initialize</h1>
+        <button id="start-btn">START SESSION</button>
+
+        <div id="portfolio-content">
+          <h1>Hi, I'm Elman</h1>
+          <h2>
+            A full stack passionate developer exploring LLMs and AI agents.
+          </h2>
+          <div class="button-grid">
+            <button class="glass-menu-btn" onclick="triggerCardStack('about')">
+              about
+            </button>
+            <button class="glass-menu-btn" onclick="triggerCardStack('stack')">
+              stack
+            </button>
+            <button
+              class="glass-menu-btn"
+              onclick="triggerCardStack('experience')"
+            >
+              experience
+            </button>
+            <button
+              class="glass-menu-btn"
+              onclick="triggerCardStack('education')"
+            >
+              education
+            </button>
+            <button
+              class="glass-menu-btn"
+              onclick="triggerCardStack('projects')"
+            >
+              projects
+            </button>
+            <button
+              class="glass-menu-btn"
+              onclick="triggerCardStack('contact')"
+            >
+              contact
+            </button>
+          </div>
+        </div>
+
+        <div id="card-stack-container"></div>
+      </div>
+    </div>
+
+    <script>
+      const CARD_DATABASE = {
+        about: {
+          title: "About Me",
+          items: [
+            {
+              text: "I am a Full Stack Developer deeply obsessed with engineering responsive user layouts and modular architecture frameworks.",
+              type: "reveal-left",
+            },
+            {
+              text: "Currently, I spend my technical hours training LLMs and deploying autonomous reasoning software agents.",
+              type: "reveal-right",
+            },
+            {
+              text: "My design philosophy relies entirely on minimalist geometry interfaces mixed with procedural animation engines to bring websites to life.",
+              type: "reveal-scale",
+            },
+            {
+              text: "When I am not writing core software features, I build physical interactive gadgets and study complex system mechanics.",
+              type: "reveal-item",
+            },
+          ],
+        },
+        stack: {
+          title: "Technical Stack",
+          items: [
+            {
+              text: "Frontend Stack Core: Vanilla JavaScript Systems, Modern Canvas Renderers, WebGL Engines (Three.js), CSS Architecture, and Tailwind Engine layouts.",
+              type: "reveal-left",
+            },
+            {
+              text: "Backend Architecture Infrastructure: Node.js ecosystems, Python, distributed event systems, and complex API pipeline integrations.",
+              type: "reveal-right",
+            },
+            {
+              text: "AI Integration Engine layer: LangChain orchestration protocols, Vector Database pipelines, Hugging Face models, and secure context logic arrays.",
+              type: "reveal-scale",
+            },
+          ],
+        },
+        experience: {
+          title: "Experience",
+          isTimeline: true,
+          nodes: [
+            {
+              date: "2025 - PRESENT",
+              role: "Senior Core Developer Intern",
+              company: "AI Systems Group Corp",
+              desc: "Spearheaded dynamic dashboard render systems handling huge stream calculations, optimizing matrix calculations on WebGL viewports.",
+            },
+            {
+              date: "2024 - 2025",
+              role: "Lead Interaction Engineer",
+              company: "NextGen Web Labs",
+              desc: "Designed fluid physics micro-interactions and interactive layout maps for modern web applications using customized pipeline modules.",
+            },
+          ],
+        },
+        education: {
+          title: "Education",
+          items: [
+            {
+              text: "B.S. in Computer Science Engineering — Advanced Focus Track on Multi-Agent Artificial Intelligence Ecosystems and Web Architecture Protocols.",
+              type: "reveal-scale",
+            },
+            {
+              text: "Certified International Systems Architect — Continuous training tracks in programmatic canvas mathematics, vector systems, and matrix rendering engines.",
+              type: "reveal-item",
+            },
+          ],
+        },
+        projects: {
+          title: "Projects",
+          items: [
+            {
+              text: "Project R4X Dynamic Fluid Core — Procedural physics interaction engine built with Navier-Stokes mathematical equations mapping mouse acceleration.",
+              type: "reveal-left",
+            },
+            {
+              text: "AgentSync Framework — Decentralized multi-agent system coordinating vector memory lookups across live real-time API socket configurations.",
+              type: "reveal-right",
+            },
+          ],
+        },
+        contact: {
+          title: "Contact",
+          items: [
+            {
+              text: "Want to talk code, integration pipelines, or build highly immersive creative software applications together?",
+              type: "reveal-scale",
+            },
+            {
+              text: "Drop an automated payload transmission directly into my mailbox at: admin@r4x-portfolio-agent.io",
+              type: "reveal-item",
+            },
+          ],
+        },
+      };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      // FLUID DYNAMICS ENGINE (ROBOT)
+      const dyeCanvas = document.getElementById("dyeCanvas");
+      const N = 128;
+      const TOT = (N + 2) * (N + 2);
+      dyeCanvas.width = N;
+      dyeCanvas.height = N;
+      const dc = dyeCanvas.getContext("2d");
+      const idx = (x, y) => x + (N + 2) * y;
+      let vx = new Float32Array(TOT),
+        vy = new Float32Array(TOT),
+        vx0 = new Float32Array(TOT),
+        vy0 = new Float32Array(TOT);
+      let r = new Float32Array(TOT),
+        g = new Float32Array(TOT),
+        b = new Float32Array(TOT),
+        r0 = new Float32Array(TOT),
+        g0 = new Float32Array(TOT),
+        b0 = new Float32Array(TOT);
+      const VISC = 0.00001,
+        DIFF = 0.0001,
+        DT = 0.15,
+        DISS = 0.98;
+
+      function set_bnd(bnd, x) {
+        for (let i = 1; i <= N; i++) {
+          x[idx(0, i)] = bnd === 1 ? -x[idx(1, i)] : x[idx(1, i)];
+          x[idx(N + 1, i)] = bnd === 1 ? -x[idx(N, i)] : x[idx(N, i)];
+          x[idx(i, 0)] = bnd === 2 ? -x[idx(i, 1)] : x[idx(i, 1)];
+          x[idx(i, N + 1)] = bnd === 2 ? -x[idx(i, N)] : x[idx(i, N)];
+        }
+      }
+      function lin_solve(bnd, x, x0, a, c) {
+        const ci = 1 / c;
+        for (let k = 0; k < 10; k++) {
+          for (let j = 1; j <= N; j++)
+            for (let i = 1; i <= N; i++)
+              x[idx(i, j)] =
+                (x0[idx(i, j)] +
+                  a *
+                    (x[idx(i - 1, j)] +
+                      x[idx(i + 1, j)] +
+                      x[idx(i, j - 1)] +
+                      x[idx(i, j + 1)])) *
+                ci;
+          set_bnd(bnd, x);
+        }
+      }
+      function diffuse(bnd, x, x0, diff) {
+        lin_solve(bnd, x, x0, diff * DT * N * N, 1 + 4 * diff * DT * N * N);
+      }
+      function advect(bnd, d, d0, u, v) {
+        const dt0 = DT * N;
+        for (let j = 1; j <= N; j++)
+          for (let i = 1; i <= N; i++) {
+            let xi = i - dt0 * u[idx(i, j)],
+              yi = j - dt0 * v[idx(i, j)];
+            xi = Math.max(0.5, Math.min(N + 0.5, xi));
+            yi = Math.max(0.5, Math.min(N + 0.5, yi));
+            const i0 = Math.floor(xi),
+              i1 = i0 + 1,
+              j0 = Math.floor(yi),
+              j1 = j0 + 1;
+            const s1 = xi - i0,
+              s0 = 1 - s1,
+              t1 = yi - j0,
+              t0 = 1 - t1;
+            d[idx(i, j)] =
+              s0 * (t0 * d0[idx(i0, j0)] + t1 * d0[idx(i0, j1)]) +
+              s1 * (t0 * d0[idx(i1, j0)] + t1 * d0[idx(i1, j1)]);
+          }
+        set_bnd(bnd, d);
+      }
+      function project(u, v, p, div) {
+        const h = 1 / N;
+        for (let j = 1; j <= N; j++)
+          for (let i = 1; i <= N; i++) {
+            div[idx(i, j)] =
+              -0.5 *
+              h *
+              (u[idx(i + 1, j)] -
+                u[idx(i - 1, j)] +
+                v[idx(i, j + 1)] -
+                v[idx(i, j - 1)]);
+            p[idx(i, j)] = 0;
+          }
+        set_bnd(0, div);
+        set_bnd(0, p);
+        lin_solve(0, p, div, 1, 4);
+        for (let j = 1; j <= N; j++)
+          for (let i = 1; i <= N; i++) {
+            u[idx(i, j)] -= (0.5 * (p[idx(i + 1, j)] - p[idx(i - 1, j)])) / h;
+            v[idx(i, j)] -= (0.5 * (p[idx(i, j + 1)] - p[idx(i, j - 1)])) / h;
+          }
+        set_bnd(1, u);
+        set_bnd(2, v);
+      }
+      function vel_step() {
+        diffuse(1, vx0, vx, VISC);
+        diffuse(2, vy0, vy, VISC);
+        project(vx0, vy0, vx, vy);
+        advect(1, vx, vx0, vx0, vy0);
+        advect(2, vy, vy0, vx0, vy0);
+        project(vx, vy, vx0, vy0);
+      }
+      function den_step() {
+        diffuse(0, r0, r, DIFF);
+        advect(0, r, r0, vx, vy);
+        diffuse(0, g0, g, DIFF);
+        advect(0, g, g0, vx, vy);
+        diffuse(0, b0, b, DIFF);
+        advect(0, b, b0, vx, vy);
+        for (let i = 0; i < TOT; i++) {
+          r[i] *= DISS;
+          g[i] *= DISS;
+          b[i] *= DISS;
+        }
+      }
+
+      const imgData = dc.createImageData(N, N);
+      function renderDye() {
+        const px = imgData.data;
+        for (let j = 1; j <= N; j++)
+          for (let i = 1; i <= N; i++) {
+            const p = ((j - 1) * N + (i - 1)) * 4,
+              id = idx(i, j);
+            const rv = Math.min(1, r[id] * 5),
+              gv = Math.min(1, g[id] * 5),
+              bv = Math.min(1, b[id] * 5);
+            px[p] = Math.round(210 * (1 - rv * 0.7) + rv * 255);
+            px[p + 1] = Math.round(190 * (1 - gv * 0.7) + gv * 240);
+            px[p + 2] = Math.round(235 * (1 - bv * 0.5) + bv * 255);
+            px[p + 3] = 255;
+          }
+        dc.putImageData(imgData, 0, 0);
+      }
+
+      const PALETTE = [
+        [0.95, 0.2, 0.7],
+        [0.15, 0.5, 1.0],
+        [0.05, 0.9, 0.75],
+        [1.0, 0.45, 0.05],
+      ];
+      let palT = 0;
+      function splat(gx, gy, fvx, fvy, force) {
+        const ci = Math.floor(palT) % PALETTE.length,
+          cn = (ci + 1) % PALETTE.length,
+          ft = palT - Math.floor(palT);
+        const cr = PALETTE[ci][0] * (1 - ft) + PALETTE[cn][0] * ft,
+          cg = PALETTE[ci][1] * (1 - ft) + PALETTE[cn][1] * ft,
+          cb = PALETTE[ci][2] * (1 - ft) + PALETTE[cn][2] * ft;
+        const rad = N * 0.07;
+        for (let j = 1; j <= N; j++)
+          for (let i = 1; i <= N; i++) {
+            const dx = i - gx,
+              dy = j - gy,
+              e = Math.exp(-(dx * dx + dy * dy) / (rad * rad));
+            vx[idx(i, j)] += fvx * e * force * DT;
+            vy[idx(i, j)] += fvy * e * force * DT;
+            r[idx(i, j)] += cr * e * 0.9;
+            g[idx(i, j)] += cg * e * 0.9;
+            b[idx(i, j)] += cb * e * 0.9;
+          }
+      }
+
+      // THREE.JS CONFIGS
+      const robotCanvas = document.getElementById("robotCanvas");
+      let W = window.innerWidth,
+        H = window.innerHeight;
+      const renderer = new THREE.WebGLRenderer({
+        canvas: robotCanvas,
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
+      camera.position.set(0, 1, 11);
+      camera.lookAt(0, 2.5, 0);
+
+      const pCanvas = document.createElement("canvas");
+      pCanvas.width = 256;
+      pCanvas.height = 256;
+      const pCtx = pCanvas.getContext("2d");
+      pCtx.fillStyle = "#e2e2e5";
+      pCtx.fillRect(0, 0, 256, 256);
+      pCtx.fillStyle = "#cfcfd2";
+      for (let i = 0; i < 180; i++) {
+        pCtx.beginPath();
+        pCtx.arc(
+          Math.random() * 256,
+          Math.random() * 256,
+          1.5 + Math.random() * 1.5,
+          0,
+          Math.PI * 2,
+        );
+        pCtx.fill();
+      }
+      const groundTex = new THREE.CanvasTexture(pCanvas);
+      groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping;
+      groundTex.repeat.set(80, 80);
+
+      const groundMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(100, 100),
+        new THREE.MeshStandardMaterial({ map: groundTex, roughness: 0.85 }),
+      );
+      groundMesh.rotation.x = -Math.PI / 2;
+      groundMesh.receiveShadow = true;
+      scene.add(groundMesh);
+
+      const pCount = 1500;
+      const pGeom = new THREE.BufferGeometry();
+      const pPos = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount; i++) {
+        pPos[i * 3] = (Math.random() - 0.5) * 30;
+        pPos[i * 3 + 1] = Math.random() * 12;
+        pPos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      }
+      pGeom.setAttribute("position", new THREE.BufferAttribute(pPos, 3));
+      const sunSpecks = new THREE.Points(
+        pGeom,
+        new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.12,
+          transparent: true,
+          opacity: 0.6,
+        }),
+      );
+      scene.add(sunSpecks);
+
+      const robotScaleGroup = new THREE.Group();
+      robotScaleGroup.scale.set(0.65, 0.65, 0.65);
+      scene.add(robotScaleGroup);
+
+      const robotRoot = new THREE.Group();
+      robotScaleGroup.add(robotRoot);
+
+      const colorPt = new THREE.PointLight(0xbb55ff, 2.5, 15);
+      colorPt.position.set(0, 1.5, 0);
+      robotRoot.add(colorPt);
+
+      const sCanvas = document.createElement("canvas");
+      sCanvas.width = 512;
+      sCanvas.height = 512;
+      const sCtx = sCanvas.getContext("2d");
+      sCtx.fillStyle = "#fafafa";
+      sCtx.fillRect(0, 0, 512, 512);
+      sCtx.fillStyle = "#d0d0d0";
+      for (let i = 0; i < 400; i++) {
+        sCtx.beginPath();
+        sCtx.arc(
+          Math.random() * 512,
+          Math.random() * 512,
+          Math.random() * 2 + 1,
+          0,
+          Math.PI * 2,
+        );
+        sCtx.fill();
+      }
+      const bodyTex = new THREE.CanvasTexture(sCanvas);
+      bodyTex.wrapS = bodyTex.wrapT = THREE.RepeatWrapping;
+
+      const BODY_R = 1.725,
+        BODY_YSCALE = 1.25;
+      const BODY_HALF_H = BODY_R * BODY_YSCALE;
+      const BODY_TOP = BODY_HALF_H * 2;
+      const bodyMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(BODY_R, 48, 48),
+        new THREE.MeshStandardMaterial({ map: bodyTex, roughness: 0.4 }),
+      );
+      bodyMesh.scale.set(1, BODY_YSCALE, 1);
+      bodyMesh.position.set(0, BODY_HALF_H, 0);
+      bodyMesh.castShadow = true;
+      robotRoot.add(bodyMesh);
+
+      const collarMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.83, 0.83, 0.12, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffffff }),
+      );
+      collarMesh.position.y = BODY_TOP;
+      robotRoot.add(collarMesh);
+
+      const HEAD_PIVOT_Y = BODY_TOP + 0.07;
+      const headPivot = new THREE.Group();
+      headPivot.position.y = HEAD_PIVOT_Y;
+      robotRoot.add(headPivot);
+
+      const HEAD_R = 0.897;
+      const headMat = new THREE.MeshPhysicalMaterial({
+        color: 0xb060ff,
+        roughness: 0.05,
+        clearcoat: 1.0,
+      });
+      const headMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(HEAD_R, 48, 48),
+        headMat,
+      );
+      headMesh.position.y = HEAD_R;
+      headMesh.castShadow = true;
+      headPivot.add(headMesh);
+
+      function makeEye(x) {
+        const eg = new THREE.Group();
+        const w = new THREE.Mesh(
+          new THREE.SphereGeometry(0.21, 24, 24),
+          new THREE.MeshStandardMaterial({ color: 0x000000 }),
+        );
+        w.scale.set(1.1, 1.3, 0.5);
+        eg.add(w);
+        eg.position.set(x, HEAD_R * 1.08, HEAD_R * 0.84);
+        return eg;
+      }
+      headPivot.add(makeEye(-0.29), makeEye(0.29));
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
+      dirLight.position.set(5, 15, 5);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+
+      // COORDINATE METRICS & AUTOMATION FLAGS
+      let mx = 0,
+        my = 0,
+        pmx = 0,
+        pmy = 0;
+      let headSX = 0,
+        headSY = 0,
+        headSR = 80;
+
+      let totalDistance = 0;
+      let initialized = false;
+
+      let isSessionActive = false;
+      let blockMouseControl = false;
+      let sequenceStage = 0; // 0=Default, 1=Ghost Swiping Left, 2=Docked active mode
+
+      let ghostCursorX = 0;
+      let ghostCursorY = 0;
+
+      const banner = document.getElementById("banner");
+      const bannerTitle = document.getElementById("banner-title");
+      const startBtn = document.getElementById("start-btn");
+      const navbar = document.getElementById("navbar");
+      const portfolioContent = document.getElementById("portfolio-content");
+      const stackContainer = document.getElementById("card-stack-container");
+
+      window.addEventListener("mousemove", (e) => {
+        if (blockMouseControl && sequenceStage === 1) return;
+
+        if (!initialized) {
+          const dx_m = e.movementX || 0;
+          const dy_m = e.movementY || 0;
+          totalDistance += Math.sqrt(dx_m * dx_m + dy_m * dy_m);
+
+          if (totalDistance > 600) {
+            startInitializationSequence();
+          }
+        }
+
+        pmx = mx;
+        pmy = my;
+        mx = (e.clientX / W) * 2 - 1;
+        my = -(e.clientY / H) * 2 + 1;
+
+        const dx = e.clientX - headSX,
+          dy = e.clientY - headSY;
+        const norm = headSR * 2;
+        if (norm > 0) {
+          const gx = (dx / norm + 0.5) * N,
+            gy = (dy / norm + 0.5) * N;
+          if (gx > 0 && gx < N && gy > 0 && gy < N) {
+            splat(gx, gy, (mx - pmx) * N * 3, -(my - pmy) * N * 3, 1.2);
+          }
+        }
+      });
+
+      function startInitializationSequence() {
+        initialized = true;
+        bannerTitle.innerText = "Initializing profile OS...";
+        setTimeout(() => {
+          bannerTitle.innerText = "Loading your profile data...";
+          setTimeout(() => {
+            bannerTitle.innerText = "Profile loaded. Click below to enter.";
+            startBtn.classList.add("visible");
+          }, 2000);
+        }, 1200);
+      }
+
+      startBtn.addEventListener("click", () => {
+        startBtn.style.display = "none";
+        bannerTitle.style.display = "none";
+
+        ghostCursorX = mx;
+        ghostCursorY = my;
+
+        blockMouseControl = true;
+        sequenceStage = 1;
+        banner.classList.add("active-profile");
+      });
+
+      function completeTransitionSequence() {
+        if (isSessionActive) return;
+        sequenceStage = 2;
+        blockMouseControl = false;
+        isSessionActive = true;
+
+        mx = ghostCursorX;
+        my = ghostCursorY;
+
+        navbar.classList.add("visible");
+
+        // MODIFICATION 1: Append explicit class so pipeline triggers on the layout engine during initial load phase
+        portfolioContent.classList.add("first-time");
+        portfolioContent.classList.add("show");
+      }
+
+      // CARD LAYER CONTROL SYSTEMS
+      let activeCardLayers = [];
+
+      function triggerCardStack(cardId) {
+        if (!CARD_DATABASE[cardId]) return;
+
+        if (activeCardLayers.length === 0) {
+          portfolioContent.classList.remove("show");
+          portfolioContent.classList.add("hide-to-side");
+          stackContainer.classList.add("active");
+        }
+
+        if (activeCardLayers.includes(cardId)) {
+          const index = activeCardLayers.indexOf(cardId);
+          activeCardLayers.splice(index, 1);
+        }
+
+        activeCardLayers.unshift(cardId);
+        renderStackLayers();
+      }
+
+      function renderStackLayers() {
+        stackContainer.innerHTML = "";
+        const visibleLayers = activeCardLayers.slice(0, 3).reverse();
+
+        visibleLayers.forEach((cardId, index) => {
+          const layerPosition = visibleLayers.length - 1 - index;
+          const data = CARD_DATABASE[cardId];
+
+          const cardElement = document.createElement("div");
+          cardElement.className = `portfolio-card layer-${layerPosition}`;
+          cardElement.id = `card-${cardId}`;
+
+          let innerHTML = `<button class="card-close-btn" onclick="closeTopCard()"><i class="fa-solid fa-xmark"></i></button>`;
+          innerHTML += `<div class="card-scrollbox">`;
+          innerHTML += `<h3>${data.title}</h3>`;
+
+          if (data.isTimeline) {
+            innerHTML += `<div class="timeline-container">`;
+            data.nodes.forEach((node) => {
+              innerHTML += `
+                <div class="timeline-node">
+                  <div class="timeline-date">${node.date}</div>
+                  <div class="timeline-role">${node.role} — <span style="font-weight:700; opacity:0.85;">${node.company}</span></div>
+                  <div class="timeline-desc">${node.desc}</div>
+                </div>`;
+            });
+            innerHTML += `</div>`;
+          } else {
+            data.items.forEach((item) => {
+              innerHTML += `<div class="reveal-item revealed ${item.type || ""}">${item.text}</div>`;
+            });
+          }
+
+          innerHTML += `</div>`;
+          cardElement.innerHTML = innerHTML;
+          stackContainer.appendChild(cardElement);
+        });
+
+        document
+          .querySelectorAll(".nav-icon-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        if (activeCardLayers.length > 0) {
+          const currentTopId = activeCardLayers[0];
+          const activeNavBtn = document.getElementById(`nav-${currentTopId}`);
+          if (activeNavBtn) activeNavBtn.classList.add("active");
+        } else {
+          document.getElementById("nav-home").classList.add("active");
+        }
+      }
+
+      function closeTopCard() {
+        if (activeCardLayers.length === 0) return;
+        activeCardLayers.shift();
+
+        if (activeCardLayers.length === 0) {
+          stackContainer.classList.remove("active");
+          portfolioContent.classList.remove("hide-to-side");
+
+          // MODIFICATION 1: Remove "first-time" to prevent re-triggering the cascading blur reveal engine
+          portfolioContent.classList.remove("first-time");
+          portfolioContent.classList.add("show");
+
+          document
+            .querySelectorAll(".nav-icon-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+          document.getElementById("nav-home").classList.add("active");
+        } else {
+          renderStackLayers();
+        }
+      }
+
+      function openCardFromNav(cardId) {
+        if (!isSessionActive) return;
+        triggerCardStack(cardId);
+      }
+
+      function resetToHomeDashboard() {
+        if (!isSessionActive) return;
+        activeCardLayers = [];
+        stackContainer.classList.remove("active");
+        stackContainer.innerHTML = "";
+        portfolioContent.classList.remove("hide-to-side");
+
+        // MODIFICATION 1: Turn off pipeline blur engine animations for instant subsequent rendering updates
+        portfolioContent.classList.remove("first-time");
+        portfolioContent.classList.add("show");
+
+        document
+          .querySelectorAll(".nav-icon-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById("nav-home").classList.add("active");
+      }
+
+      const _v3 = new THREE.Vector3();
+      function updateDyeOverlay() {
+        _v3.set(0, HEAD_R, 0);
+        headPivot.localToWorld(_v3);
+        _v3.project(camera);
+        const sx = (_v3.x * 0.5 + 0.5) * W,
+          sy = (-_v3.y * 0.5 + 0.5) * H;
+        const _v3b = new THREE.Vector3(HEAD_R, HEAD_R, 0);
+        headPivot.localToWorld(_v3b);
+        _v3b.project(camera);
+        const ex = (_v3b.x * 0.5 + 0.5) * W;
+        const sr = Math.abs(ex - sx) * 0.95;
+        headSX = sx;
+        headSY = sy;
+        headSR = sr;
+        dyeCanvas.style.width = sr * 2 + "px";
+        dyeCanvas.style.height = sr * 2 + "px";
+        dyeCanvas.style.left = sx - sr + "px";
+        dyeCanvas.style.top = sy - sr + "px";
+        dyeCanvas.style.mixBlendMode = "screen";
+      }
+
+      let targetPosX = 0,
+        curPosX = 0;
+      let targetRotZ = 0,
+        curRotZ = 0;
+      let curHeadY = 0,
+        curHeadX = 0;
+      const clock = new THREE.Clock();
+
+      // RENDER CORE LOOP
+      function loop() {
+        requestAnimationFrame(loop);
+        const t = clock.getElapsedTime();
+        palT += 0.01;
+        const ci = Math.floor(palT) % PALETTE.length,
+          cn = (ci + 1) % PALETTE.length,
+          ft = palT - Math.floor(palT);
+
+        headMat.color.setRGB(
+          PALETTE[ci][0] * (1 - ft) + PALETTE[cn][0] * ft,
+          PALETTE[ci][1] * (1 - ft) + PALETTE[cn][1] * ft,
+          PALETTE[ci][2] * (1 - ft) + PALETTE[cn][2] * ft,
+        );
+        colorPt.color.copy(headMat.color);
+
+        let activeInputX = mx;
+        let activeInputY = my;
+
+        if (sequenceStage === 1) {
+          ghostCursorX = THREE.MathUtils.lerp(ghostCursorX, -0.78, 0.04);
+          ghostCursorY = THREE.MathUtils.lerp(ghostCursorY, -0.15, 0.04);
+
+          activeInputX = ghostCursorX;
+          activeInputY = ghostCursorY;
+        }
+
+        // FRUSTUM PROJECTION MATRIX
+        const visibleHeightAtDepth =
+          2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
+        const visibleWidthAtDepth = visibleHeightAtDepth * camera.aspect;
+        const scaledRobotRadius = BODY_R * 0.65;
+
+        // MODIFICATION 2: Strict wall metrics collision framework for both Stage 1 and Stage 2 environments
+        if (sequenceStage === 2) {
+          const navbarRightEdgePercent = 85 / W;
+          const absoluteMinLeftX =
+            navbarRightEdgePercent * visibleWidthAtDepth -
+            visibleWidthAtDepth / 2 +
+            scaledRobotRadius +
+            0.1;
+
+          // Compute the exact position of the banner's left boundary inside the WebGL world space coordinate system
+          // Since it is 55vw fixed width on the right hand side: Available space factor is exactly (100 - 55) / 100 = 0.45
+          const dynamicBannerLeftX =
+            0.45 * visibleWidthAtDepth - visibleWidthAtDepth / 2;
+          const absoluteMaxRightX =
+            dynamicBannerLeftX - scaledRobotRadius - 0.15;
+
+          targetPosX = THREE.MathUtils.clamp(
+            activeInputX * 6,
+            absoluteMinLeftX,
+            absoluteMaxRightX,
+          );
+        } else if (sequenceStage === 1) {
+          const currentBannerWidthPercent =
+            parseFloat(banner.style.width) || 22;
+          const currentAvailableSpaceFactor =
+            (100 - currentBannerWidthPercent) / 100;
+          const dynamicBannerLeftX =
+            currentAvailableSpaceFactor * visibleWidthAtDepth -
+            visibleWidthAtDepth / 2;
+          const dynamicMaxRightX =
+            dynamicBannerLeftX - scaledRobotRadius - 0.05;
+
+          targetPosX = THREE.MathUtils.clamp(
+            activeInputX * 6,
+            -5.7,
+            dynamicMaxRightX,
+          );
+        } else {
+          // Standard Initialization Stage 0 Bound setup
+          const initialBannerLeftX =
+            0.78 * visibleWidthAtDepth - visibleWidthAtDepth / 2;
+          const stage0MaxRightX = initialBannerLeftX - scaledRobotRadius - 0.05;
+
+          targetPosX = THREE.MathUtils.clamp(
+            activeInputX * 6,
+            -5.7,
+            stage0MaxRightX,
+          );
+        }
+
+        curPosX = THREE.MathUtils.lerp(curPosX, targetPosX, 0.0325);
+        targetRotZ = -(targetPosX - curPosX) * 0.038;
+        curRotZ = THREE.MathUtils.lerp(curRotZ, targetRotZ, 0.0325);
+
+        robotRoot.position.x = curPosX;
+        robotRoot.rotation.z = curRotZ;
+        robotRoot.rotation.x = THREE.MathUtils.lerp(
+          robotRoot.rotation.x,
+          activeInputY * 0.2,
+          0.0325,
+        );
+        bodyMesh.rotation.y = curPosX * 0.35;
+        groundTex.offset.x += curPosX * 0.003;
+
+        curHeadY = THREE.MathUtils.lerp(curHeadY, activeInputX * 0.6, 0.07);
+        curHeadX = THREE.MathUtils.lerp(curHeadX, -activeInputY * 0.4, 0.07);
+        headPivot.rotation.y = curHeadY;
+        headPivot.rotation.x = curHeadX;
+        headPivot.position.y = HEAD_PIVOT_Y + Math.sin(t * 3.0) * 0.08;
+        bodyMesh.position.y = BODY_HALF_H + Math.sin(t * 1.5) * 0.03;
+
+        sunSpecks.rotation.y += 0.0008;
+        sunSpecks.position.y = Math.sin(t * 0.5) * 0.12;
+
+        /* ROBOT-DRIVEN POSITION & CAP ENGINE */
+        if (sequenceStage === 1 || sequenceStage === 2) {
+          if (isSessionActive) {
+            banner.style.width = "55vw";
+          } else {
+            const meshRightEdgeVector = new THREE.Vector3(
+              BODY_R * 1.05,
+              BODY_HALF_H,
+              0,
+            );
+            robotRoot.localToWorld(meshRightEdgeVector);
+            meshRightEdgeVector.project(camera);
+
+            const screenRightEdgePercent =
+              (meshRightEdgeVector.x * 0.5 + 0.5) * 100;
+            const dynamicCalculatedWidth = 100 - screenRightEdgePercent;
+            const targetFinalBannerWidth = Math.min(55, dynamicCalculatedWidth);
+
+            banner.style.width = `${targetFinalBannerWidth}vw`;
+
+            if (sequenceStage === 1 && targetFinalBannerWidth >= 54) {
+              completeTransitionSequence();
+            }
+          }
+          banner.style.right = "0px";
+          banner.style.left = "auto";
+        }
+
+        vel_step();
+        den_step();
+        renderDye();
+        updateDyeOverlay();
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", () => {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        renderer.setSize(W, H);
+        camera.aspect = W / H;
+        camera.updateProjectionMatrix();
+      });
+
+      loop();
+    </script>
+  </body>
+</html>
