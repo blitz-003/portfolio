@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" style="background: #efefef">
+<html lang="en" style="background: #e0e0e4">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,7 +16,7 @@
       }
       body {
         overflow: hidden;
-        background: #efefef;
+        background: #e0e0e4;
         cursor: crosshair;
         font-family: "Inter", sans-serif;
       }
@@ -276,7 +276,7 @@
       }
 
       /* White Buttons - Normal State 30% More White Glowing Matrix */
-      /* .glass-menu-btn {
+      .glass-menu-btn {
         position: relative;
         background: rgba(255, 255, 255, 0.65);
         border: 1px solid rgba(255, 255, 255, 0.75);
@@ -308,63 +308,8 @@
 
       .glass-menu-btn:active {
         transform: scale(0.99) translateY(0px);
-      } */
-
-      .glass-menu-btn {
-        position: relative;
-        background: rgba(255, 255, 255, 0.65); /* Kept your exact color base */
-        border-radius: 28px;
-        padding: 34px 15px;
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #000000;
-        cursor: pointer;
-        text-align: center;
-        overflow: hidden;
-        text-transform: capitalize;
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-
-        /* Removed border and amplified shadows for a strong 3D outward pop */
-        border: none;
-        box-shadow:
-          6px 6px 16px rgba(0, 0, 0, 0.09),
-          /* Darker for a real upward pop */ -6px -6px 16px
-            rgba(255, 255, 255, 0.9),
-          /* Strong white highlight */ inset 1px 1px 0px
-            rgba(255, 255, 255, 0.6); /* Crisp inner top-left edge */
       }
 
-      .glass-menu-btn:hover {
-        background: rgba(
-          255,
-          255,
-          255,
-          0.85
-        ); /* Kept soft, premium glow transition */
-        color: #000000;
-        transform: scale(1.02) translateY(-4px); /* Enhanced upward movement */
-
-        /* Shadows expand as the button moves further "up" from the background */
-        box-shadow:
-          12px 12px 24px rgba(0, 0, 0, 0.12),
-          -12px -12px 24px rgba(255, 255, 255, 0.95),
-          inset 1px 1px 0px rgba(255, 255, 255, 0.8);
-      }
-
-      .glass-menu-btn:active {
-        background: rgba(
-          255,
-          255,
-          255,
-          0.55
-        ); /* Dims slightly as it moves down */
-        transform: scale(0.98) translateY(2px); /* Pushes down past original plane */
-
-        /* Flips shadows to inset so it looks deeply carved/pressed into the interface */
-        box-shadow:
-          inset 6px 6px 12px rgba(0, 0, 0, 0.1),
-          inset -6px -6px 12px rgba(255, 255, 255, 0.8);
-      }
       /* Left Navbar Layer Configuration */
       #navbar {
         position: absolute;
@@ -393,7 +338,7 @@
         animation: lineBlurRevealDrop 1.4s cubic-bezier(0.19, 1, 0.22, 1)
           forwards;
       }
-      /* 
+
       .nav-icon-btn {
         width: 50px;
         height: 50px;
@@ -414,83 +359,8 @@
         color: #000000;
         border-color: rgba(255, 255, 255, 0.8);
         transform: scale(1.05);
-      } */
-
-      /* .nav-icon-btn {
-        width: 50px;
-        height: 50px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #000000;
-        font-size: 1.25rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      .nav-icon-btn:hover,
-      .nav-icon-btn.active {
-        background: rgba(255, 255, 255, 0.85);
-        color: #000000;
-        border-color: rgba(255, 255, 255, 0.8);
-        transform: scale(1.05);
-      } */
-
-      .nav-icon-btn {
-        width: 50px;
-        height: 50px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.3); /* Kept your perfect color base */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #000000;
-        font-size: 1.25rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        /* Neumorphic soft extrusion */
-        border: none;
-        box-shadow:
-          4px 4px 10px rgba(0, 0, 0, 0.08),
-          /* Bottom-right soft shadow */ -4px -4px 10px rgba(255, 255, 255, 0.6),
-          /* Top-left bright highlight */ inset 1px 1px 1px
-            rgba(255, 255, 255, 0.4); /* Subtle inner top-left edge */
       }
 
-      .nav-icon-btn:hover {
-        background: rgba(
-          255,
-          255,
-          255,
-          0.45
-        ); /* Slight lift in brightness on hover */
-        color: #000000;
-        transform: translateY(
-          -2px
-        ); /* Slight physical lift instead of a generic scale */
-        box-shadow:
-          6px 6px 14px rgba(0, 0, 0, 0.1),
-          -6px -6px 14px rgba(255, 255, 255, 0.7);
-      }
-
-      .nav-icon-btn.active {
-        background: rgba(
-          255,
-          255,
-          255,
-          0.25
-        ); /* Slightly darker when pressed */
-        color: #000000;
-        transform: scale(0.98); /* Feels like an actual button press */
-
-        /* The secret sauce: Inset shadows make the button look "sunken" or pressed in */
-        box-shadow:
-          inset 4px 4px 8px rgba(0, 0, 0, 0.08),
-          inset -4px -4px 8px rgba(255, 255, 255, 0.6);
-      }
       /* Stack Animation Card Display Systems */
       #card-stack-container {
         position: relative;
@@ -1201,9 +1071,9 @@
       pCanvas.width = 256;
       pCanvas.height = 256;
       const pCtx = pCanvas.getContext("2d");
-      pCtx.fillStyle = "white";
+      pCtx.fillStyle = "#e2e2e5";
       pCtx.fillRect(0, 0, 256, 256);
-      pCtx.fillStyle = "#f2f2f2";
+      pCtx.fillStyle = "#cfcfd2";
       for (let i = 0; i < 180; i++) {
         pCtx.beginPath();
         pCtx.arc(
@@ -1220,7 +1090,7 @@
       groundTex.repeat.set(80, 80);
       const groundMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(100, 100),
-        new THREE.MeshStandardMaterial({ map: groundTex, roughness: 0.0 }),
+        new THREE.MeshStandardMaterial({ map: groundTex, roughness: 0.85 }),
       );
       groundMesh.rotation.x = -Math.PI / 2;
       groundMesh.receiveShadow = true;
@@ -1332,7 +1202,7 @@
       }
       headPivot.add(makeEye(0), makeEye(1));
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.75));
       const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
       dirLight.position.set(5, 15, 5);
       dirLight.castShadow = true;
