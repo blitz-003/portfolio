@@ -17,9 +17,10 @@
       body {
         overflow: hidden;
         background: #efefef;
-        cursor: crosshair;
+        cursor: pointer;
         font-family: "Inter", sans-serif;
       }
+
       #container {
         position: relative;
         width: 100vw;
@@ -626,6 +627,13 @@
         opacity: 1;
         transform: translateY(0);
       }
+      .reveal-item.photo-item {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 10px;
+      }
 
       .reveal-left {
         transform: translateX(-20px);
@@ -703,6 +711,31 @@
         font-weight: 700;
       }
 
+      .download-resume-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 10px auto 0;
+        padding: 12px 24px;
+        width: calc(33.333% - 19px);
+        background: rgba(0, 0, 0, 0.9);
+        border: none;
+        border-radius: 14px;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.03em;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .download-resume-btn:hover {
+        background: #ff6b00;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(255, 107, 0, 0.3);
+      }
+
       @keyframes float {
         0%,
         100% {
@@ -710,6 +743,69 @@
         }
         50% {
           transform: translate(-50%, -50%) translateY(-12px);
+        }
+      }
+
+      @media (max-width: 1440px) {
+        #navbar {
+          top: 10vh;
+          height: 80vh;
+          padding: 12px 0;
+        }
+        #portfolio-content h1 {
+          font-size: 2.4rem;
+          margin-bottom: 8px;
+        }
+        #portfolio-content h2 {
+          font-size: 1.05rem;
+          margin-bottom: 28px;
+        }
+        .button-grid {
+          grid-gap: 22px;
+          padding: 14px 5px;
+        }
+        .glass-menu-btn {
+          padding: 22px 12px;
+          font-size: 1rem;
+        }
+        .download-resume-btn {
+          padding: 8px 16px;
+          width: auto;
+          font-size: 0.8rem;
+        }
+      }
+      @media (max-width: 1024px) {
+        #banner {
+          left: auto;
+          right: 3%;
+          transform: translateY(-50%);
+          width: 18vw;
+        }
+        #banner.active-profile {
+          right: 3%;
+          width: 18vw;
+          height: 80vh;
+        }
+        #portfolio-content h1 {
+          font-size: 2rem;
+        }
+        #portfolio-content h2 {
+          font-size: 0.95rem;
+          margin-bottom: 22px;
+        }
+        .button-grid {
+          grid-gap: 16px;
+          padding: 10px 5px;
+        }
+        .glass-menu-btn {
+          padding: 18px 10px;
+          font-size: 0.9rem;
+        }
+        .download-resume-btn {
+          padding: 6px 14px;
+          width: auto;
+          font-size: 0.75rem;
+          border-radius: 10px;
         }
       }
 
@@ -786,8 +882,9 @@
           transform: none !important;
           padding: 20px 20px 80px 20px;
           border-radius: 0 !important;
-          justify-content: flex-start;
-          align-items: flex-start;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
           background: rgba(255, 255, 255, 0.2);
           backdrop-filter: blur(30px) saturate(180%);
           -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -798,6 +895,7 @@
           height: auto;
           overflow-y: visible;
           padding-bottom: 70px;
+          align-items: center;
         }
         #portfolio-content h1 {
           font-size: 2rem;
@@ -818,6 +916,10 @@
           backdrop-filter: blur(15px);
           -webkit-backdrop-filter: blur(15px);
           border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .download-resume-btn {
+          width: auto;
+          margin-top: 15px;
         }
         .card-scrollbox {
           padding: 20px;
@@ -996,6 +1098,9 @@
               contact
             </button>
           </div>
+          <a href="Resume_Elman_Pathan.pdf" download="Resume_Elman_Pathan.pdf" class="download-resume-btn">
+            <i class="fa-solid fa-download"></i> Download Resume
+          </a>
         </div>
 
         <div id="card-stack-container"></div>
@@ -1007,6 +1112,10 @@
         about: {
           title: "About Me",
           items: [
+            {
+              text: "<div style='text-align:center;'><img src='resume_photo.png' alt='Elman Pathan' style='width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid rgba(100,180,255,0.4);box-shadow:0 4px 20px rgba(100,180,255,0.15);'></div>",
+              type: "photo-item",
+            },
             {
               text: "I am <span class='orange-highlight'>Elman Pathan</span>, a Computer Science & Engineering graduate from Fudan University (Shanghai, China) with a Minor in Entrepreneurship, awarded a Full-ride Government Scholarship for 4 years.",
               type: "reveal-left",
@@ -1886,6 +1995,8 @@
           // Stop Three.js renderer and fluid sim to save battery
           renderer.setAnimationLoop(null);
           cancelAnimationFrame = function () {};
+
+          // Hide custom cursor on mobile, restore default
         }
       })();
 
