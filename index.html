@@ -125,6 +125,25 @@
         text-align: left;
         padding: 4% 4%;
       }
+      .banner-header-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        align-items: center;
+        width: 100%;
+      }
+      .banner-text-col {
+        grid-column: 1 / 3;
+        text-align: left;
+      }
+      .banner-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 22px;
+        object-fit: cover;
+        justify-self: center;
+        transform: rotate(-3deg);
+      }
 
       #banner-intro-wrap {
         width: 100%;
@@ -196,14 +215,18 @@
 
       #portfolio-content.show.first-time h1,
       #portfolio-content.show.first-time h2,
-      #portfolio-content.show.first-time .glass-menu-btn {
+      #portfolio-content.show.first-time .glass-menu-btn,
+      #portfolio-content.show.first-time .banner-photo,
+      #portfolio-content.show.first-time .download-resume-btn {
         opacity: 0;
         animation: lineBlurRevealDrop 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
       }
 
       #portfolio-content.show h1,
       #portfolio-content.show h2,
-      #portfolio-content.show .glass-menu-btn {
+      #portfolio-content.show .glass-menu-btn,
+      #portfolio-content.show .banner-photo,
+      #portfolio-content.show .download-resume-btn {
         opacity: 1;
         transform: translateY(0);
         filter: blur(0px);
@@ -232,6 +255,12 @@
       }
       #portfolio-content.show.first-time .glass-menu-btn:nth-child(6) {
         animation-delay: 0.65s;
+      }
+      #portfolio-content.show.first-time .banner-photo {
+        animation-delay: 1.0s;
+      }
+      #portfolio-content.show.first-time .download-resume-btn {
+        animation-delay: 1.3s;
       }
 
       #portfolio-content.hide-to-side {
@@ -265,7 +294,7 @@
         color: #111111;
         margin-bottom: 45px;
         line-height: 1.6;
-        max-width: 90%;
+        white-space: nowrap;
       }
 
       .button-grid {
@@ -758,20 +787,27 @@
         }
         #portfolio-content h2 {
           font-size: 1.05rem;
-          margin-bottom: 28px;
+          margin-bottom: 10px;
         }
         .button-grid {
-          grid-gap: 22px;
-          padding: 14px 5px;
+          grid-gap: 16px;
+          padding: 10px 5px;
+        }
+        .banner-header-row {
+          gap: 16px;
+        }
+        .banner-photo {
+          width: 110px;
+          height: 110px;
         }
         .glass-menu-btn {
-          padding: 22px 12px;
-          font-size: 1rem;
+          padding: 14px 8px;
+          font-size: 0.85rem;
         }
         .download-resume-btn {
-          padding: 8px 16px;
+          padding: 5px 12px;
           width: auto;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
         }
       }
       @media (max-width: 1024px) {
@@ -787,25 +823,32 @@
           height: 80vh;
         }
         #portfolio-content h1 {
-          font-size: 2rem;
+          font-size: 1.6rem;
         }
         #portfolio-content h2 {
-          font-size: 0.95rem;
-          margin-bottom: 22px;
+          font-size: 0.85rem;
+          margin-bottom: 12px;
         }
         .button-grid {
           grid-gap: 16px;
           padding: 10px 5px;
         }
+        .banner-header-row {
+          gap: 16px;
+        }
         .glass-menu-btn {
-          padding: 18px 10px;
-          font-size: 0.9rem;
+          padding: 12px 8px;
+          font-size: 0.8rem;
         }
         .download-resume-btn {
-          padding: 6px 14px;
+          padding: 4px 12px;
           width: auto;
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           border-radius: 10px;
+        }
+        .banner-photo {
+          width: 100px;
+          height: 100px;
         }
       }
 
@@ -813,7 +856,13 @@
         body {
           overflow-y: auto;
           overflow-x: hidden;
-          background: linear-gradient(135deg, #f0e6ff 0%, #e6f0ff 30%, #ffe6e6 60%, #e6ffe6 100%);
+          background: linear-gradient(
+            135deg,
+            #f0e6ff 0%,
+            #e6f0ff 30%,
+            #ffe6e6 60%,
+            #e6ffe6 100%
+          );
           background-attachment: fixed;
         }
         #splash-cursor-container {
@@ -920,6 +969,19 @@
         .download-resume-btn {
           width: auto;
           margin-top: 15px;
+        }
+        .banner-header-row {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 20px;
+        }
+        .banner-photo {
+          width: 80px;
+          height: 80px;
+          border-radius: 14px;
+          margin-left: auto;
+          justify-self: auto;
         }
         .card-scrollbox {
           padding: 20px;
@@ -1062,10 +1124,17 @@
         </div>
 
         <div id="portfolio-content">
-          <h1>Hi, I'm Elman</h1>
-          <h2>
-            Full-Stack Developer & Product Engineer building AI-driven systems, web platforms, and interactive 3D experiences.
-          </h2>
+          <div class="banner-header-row">
+            <div class="banner-text-col">
+              <h1>Hi, I'm Elman</h1>
+              <h2>an aspiring full stack developer</h2>
+            </div>
+            <img
+              src="resume_photo.png"
+              alt="Elman Pathan"
+              class="banner-photo"
+            />
+          </div>
           <div class="button-grid">
             <button class="glass-menu-btn" onclick="triggerCardStack('about')">
               about
@@ -1098,7 +1167,11 @@
               contact
             </button>
           </div>
-          <a href="Resume_Elman_Pathan.pdf" download="Resume_Elman_Pathan.pdf" class="download-resume-btn">
+          <a
+            href="Resume_Elman_Pathan.pdf"
+            download="Resume_Elman_Pathan.pdf"
+            class="download-resume-btn"
+          >
             <i class="fa-solid fa-download"></i> Download Resume
           </a>
         </div>
@@ -1112,10 +1185,6 @@
         about: {
           title: "About Me",
           items: [
-            {
-              text: "<div style='text-align:center;'><img src='resume_photo.png' alt='Elman Pathan' style='width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid rgba(100,180,255,0.4);box-shadow:0 4px 20px rgba(100,180,255,0.15);'></div>",
-              type: "photo-item",
-            },
             {
               text: "I am <span class='orange-highlight'>Elman Pathan</span>, a Computer Science & Engineering graduate from Fudan University (Shanghai, China) with a Minor in Entrepreneurship, awarded a Full-ride Government Scholarship for 4 years.",
               type: "reveal-left",
@@ -1660,12 +1729,15 @@
         my = ghostCursorY;
         bannerIntroWrap.style.display = "none";
         navbar.classList.add("visible");
-        portfolioContent.classList.add("first-time");
-        portfolioContent.classList.add("show");
 
-        document.getElementById("backdrop-s1").classList.add("visible");
-        document.getElementById("backdrop-s2").classList.add("visible");
-        document.getElementById("backdrop-s3").classList.add("visible");
+        setTimeout(() => {
+          portfolioContent.classList.add("first-time");
+          portfolioContent.classList.add("show");
+
+          document.getElementById("backdrop-s1").classList.add("visible");
+          document.getElementById("backdrop-s2").classList.add("visible");
+          document.getElementById("backdrop-s3").classList.add("visible");
+        }, 1200);
       }
 
       let activeCardLayers = [];
